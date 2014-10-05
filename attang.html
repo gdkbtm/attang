@@ -1,0 +1,131 @@
+<!DOCTYPE>
+<html>
+<head>
+ 
+<title>Insert title here</title>
+<!--Bootstrap Responsive Web Design or Layout-->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+<!--application style sheet-->
+<link href="css/theme.css" rel="stylesheet"> 
+</head>
+<body>
+    <form name="fTable"> 
+    <!--angularjs application-->
+    <div ng-app="myApp">
+    <!--angularjs controller-->
+    <div ng-controller="PeopleCtrl" >
+    <!--Layout of radio buttons-->
+    <div class="radioCntl">
+        <fieldset>
+        <legend>Time Period - Month</legend>         
+        <input id="timePeriodCurrent" name="timePeriod" type="radio" value="201310" ng-click="radioClick()" checked />
+        <label for="timePeriodCurrent">Current</label>
+        <input id="timePeriodPrior" name="timePeriod" type="radio" value="201309" ng-click="radioClick()"/>
+        <label for="timePeriodPrior">Prior</label>
+        </fieldset>
+    </div>
+    <!--Layout of table-->
+    <div style="overflow: auto;" class='bottom' id='reportsTable'>
+    <table >
+    <!--Top header-->
+    <tr>
+        <th class="mySales" colSpan="14">My Sales Of This Month</th>         
+    </tr>
+    <!--Table header-->
+    <tr class="header" ng-repeat="sale in sales">
+        <th>{{sale.kpi}}</th>
+        <!--show column on radio button action-->
+        <!--
+        Create Layouts with Twitter Bootstrap Grid System
+        These hidden utility classes to hide the elements on certain devices.
+        hidden-xs - Hide the elements only on extra small devices having screen width less than 768px. Visible on others.
+        hidden-sm - Hide the elements only on small devices having screen width greater than or equal to 768px (i.e. ≥768px) but less than 992px. Visible on others.
+        hidden-md - Hide the elements only on medium devices having screen width greater than or equal to 992px (i.e. ≥992px) but less than 1200px. Visible on others.
+        hidden-lg - Hide the elements only on large devices having screen width greater than or equal to 1200px (i.e. ≥1200px). Visible on others.
+        Reference - http://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-grid-system.php
+        -->
+        <th ng-show="current" class="repTd">{{sale.last7}}</th>
+        <!--Bootstrap Responsive Web Design or Layout-->
+        <th class="repTd hidden-xs">{{sale.daily}}</th>
+        <th class="repTd hidden-xs">{{sale.yest}}</th>
+        <th class="repTd hidden-xs">{{sale.mtd}}</th>
+        <th class="repTd hidden-xs">{{sale.mtdtarget}}</th>
+        <th class="repTd hidden-xs hidden-sm">{{sale.eomproj}}</th>
+        <th class="repTd hidden-xs hidden-sm">{{sale.eomtarget}}</th>
+        <th class="repTd hidden-xs hidden-sm">{{sale.eomprojvar}}</th>
+        <th class="repTd hidden-xs hidden-sm hidden-md">{{sale.attain}}</th>
+        <th class="repTd hidden-xs hidden-sm hidden-md">{{sale.priormonth}}</th>
+        <th class="repTd hidden-xs hidden-sm hidden-md">{{sale.priormonthtarget}}</th>
+        <th class="repTd hidden-xs hidden-sm hidden-md">{{sale.priormonthvar}}</th>
+        <th class="repTd">{{sale.priormonthattain}}</th>
+    </tr>
+    <!-- Render table content -->
+    <tr class="divCss" ng-class-odd="'odd'" ng-class-even="'even'" ng-repeat="record in records">
+        <!-- if %Attain > 100 display image GREEN
+                        >=95 and < 100 image YELLOW
+                        < 95 image RED
+        -->
+        <td  class="repTd" 
+            ng-if="((record.priormonthattain).trim()).substring(0, (record.priormonthattain).trim().length - 1) >= 100">
+            <img ng-src="img/iconGreenArrowUp.png" width="15px" height="15px">
+            {{record.kpi}}
+        </td>
+        <td class="repTd" 
+            ng-if="((record.priormonthattain).trim()).substring(0, (record.priormonthattain).trim().length - 1) < 95">
+            <img ng-src="img/iconRedArrowDown.png" width="15px" height="15px">
+            {{record.kpi}}
+        </td>
+        <td class="repTd" 
+            ng-if="((record.priormonthattain).trim()).substring(0, (record.priormonthattain).trim().length - 1) >= 95 &&
+                        ((record.priormonthattain).trim()).substring(0, (record.priormonthattain).trim().length - 1) < 100">
+            <img ng-src="img/iconYellowArrowRt.png" width="15px" height="15px">
+            {{record.kpi}}
+        </td>
+        <!-- repTd - left align and repTdRt - right align text within td tag
+            Bootstrap shyle classes for rendering table columns in responsive layouts
+        -->
+        <td class="repTd" ng-show="current">{{record.last7}}</td>
+        <td class="repTdRt hidden-xs">{{record.daily}}</td>
+        <td class="repTdRt hidden-xs">{{record.yest}}</td>
+        <td class="repTdRt hidden-xs">{{record.mtd}}</td>
+        <td class="repTdRt hidden-xs">{{record.mtdtarget}}</td>
+        <td class="repTdRt hidden-xs hidden-sm">{{record.eomproj}}</td>
+        <td class="repTdRt hidden-xs hidden-sm">{{record.eomtarget}}</td>
+        <td class="repTdRt hidden-xs hidden-sm">{{record.eomprojvar}}</td>
+        <td class="repTdRt hidden-xs hidden-sm hidden-md">{{record.attain}}</td>
+        <td class="repTdRt hidden-xs hidden-sm hidden-md">{{record.priormonth}}</td>
+        <td class="repTdRt hidden-xs hidden-sm hidden-md">{{record.priormonthtarget}}</td>
+        <td class="repTdRt hidden-xs hidden-sm hidden-md">{{record.priormonthvar}}</td>
+        <!--Display cells background depends on % Attain values -->
+        <td class="repTdRt GREEN" 
+            ng-if="((record.priormonthattain).trim()).substring(0, (record.priormonthattain).trim().length - 1) > 100">
+            {{record.priormonthattain}}
+        </td>
+        <td class="repTdRt YELLOW" 
+            ng-if="((record.priormonthattain).trim()).substring(0, (record.priormonthattain).trim().length - 1) >= 95 &&
+                        ((record.priormonthattain).trim()).substring(0, (record.priormonthattain).trim().length - 1) < 100">            
+            {{record.priormonthattain}}
+        </td>
+        <td class="repTdRt RED" 
+            ng-if="((record.priormonthattain).trim()).substring(0, (record.priormonthattain).trim().length - 1) < 95"> 
+            {{record.priormonthattain}}
+        </td>      
+    </tr>
+    </table>
+    </div>
+</div>     
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+ <script data-require="angular.js@*" data-semver="1.2.0-rc3-nonmin" src="http://code.angularjs.org/1.2.0-rc.3/angular.js"></script>
+    <script data-require="ng-table@*" data-semver="0.3.0" src="http://bazalt-cms.com/assets/ng-table/0.3.0/ng-table.js"></script>
+    <!-- Bootstrap-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<!-- application javascript -->
+<script src="js/app.js"></script>
+    </form>
+</body>
+
+</html>
+        
